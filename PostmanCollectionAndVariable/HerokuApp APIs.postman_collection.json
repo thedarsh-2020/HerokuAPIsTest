@@ -1,0 +1,415 @@
+{
+	"info": {
+		"_postman_id": "c446af00-07f8-4908-afe8-fbe3a70f40dc",
+		"name": "HerokuApp APIs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35018994",
+		"_collection_link": "https://api-projects-8757.postman.co/workspace/API-Testing-Projects~700964e7-404d-4ebc-8e1e-b29854ad2124/collection/35018994-c446af00-07f8-4908-afe8-fbe3a70f40dc?action=share&source=collection_link&creator=35018994"
+	},
+	"item": [
+		{
+			"name": "Create Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var statusCode = 200;\r",
+							"var clientFirstNameResp     = pm.environment.get(\"clientFirstName\").replace(/^\"(.*)\"$/, '$1')\r",
+							"var clientLastNameResp      = pm.environment.get(\"clientLastName\").replace(/^\"(.*)\"$/, '$1');\r",
+							"var totalPriceResp          = Number(pm.environment.get(\"totalPrice\"));\r",
+							"var depositPaidResp         = pm.environment.get(\"depositPaid\");\r",
+							"var checkInDateResp         = pm.environment.get(\"checkInDate\").replace(/^\"(.*)\"$/, '$1');\r",
+							"var checkOutDateResp        = pm.environment.get(\"checkOutDate\").replace(/^\"(.*)\"$/, '$1');\r",
+							"\r",
+							"pm.environment.set(\"clientID\", pm.response.json().bookingid);\r",
+							"\r",
+							"pm.test(\"Check response\", function ()\r",
+							"{\r",
+							"    pm.expect(pm.response.code).to.equal(statusCode);\r",
+							"    pm.expect(pm.response.json().booking.firstname).to.equal(clientFirstNameResp);\r",
+							"    pm.expect(pm.response.json().booking.lastname).to.equal(clientLastNameResp);\r",
+							"    pm.expect(pm.response.json().booking.totalprice).to.equal(totalPriceResp);\r",
+							"    pm.expect(String(pm.response.json().booking.depositpaid)).to.equal(depositPaidResp);\r",
+							"    pm.expect(pm.response.json().booking.bookingdates.checkin).to.equal(checkInDateResp);\r",
+							"    pm.expect(pm.response.json().booking.bookingdates.checkout).to.equal(checkOutDateResp);\r",
+							"    pm.expect(pm.response.json().bookingid).to.equal(pm.environment.get(\"clientID\"));\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\"     : {{clientFirstName}},\r\n    \"lastname\"      : {{clientLastName}},\r\n    \"totalprice\"    : {{totalPrice}},\r\n    \"depositpaid\"   : {{depositPaid}},\r\n    \"bookingdates\"  :\r\n                     {\r\n                            \"checkin\"   : {{checkInDate}},\r\n                            \"checkout\"  : {{checkOutDate}}\r\n                     }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/booking",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check New ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseIDs = pm.response.json();\r",
+							"\r",
+							"var targetID = pm.environment.get(\"clientID\");\r",
+							"\r",
+							"// checking the id is exist in the response\r",
+							"var searchID = responseIDs.some(item => item.bookingid === targetID);\r",
+							"\r",
+							"pm.test(\"Check response\", function ()\r",
+							"{\r",
+							"    pm.expect(searchID).to.be.true;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/booking",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"booking"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Booked ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var statusCode = 200;\r",
+							"var clientFirstNameResp     = pm.environment.get(\"clientFirstName\").replace(/^\"(.*)\"$/, '$1')\r",
+							"var clientLastNameResp      = pm.environment.get(\"clientLastName\").replace(/^\"(.*)\"$/, '$1');\r",
+							"var totalPriceResp          = Number(pm.environment.get(\"totalPrice\"));\r",
+							"var depositPaidResp         = pm.environment.get(\"depositPaid\");\r",
+							"var checkInDateResp         = pm.environment.get(\"checkInDate\").replace(/^\"(.*)\"$/, '$1');\r",
+							"var checkOutDateResp        = pm.environment.get(\"checkOutDate\").replace(/^\"(.*)\"$/, '$1');\r",
+							"\r",
+							"pm.test(\"Check response\", function ()\r",
+							"{\r",
+							"    pm.expect(pm.response.code).to.equal(statusCode);\r",
+							"    pm.expect(pm.response.json().firstname).to.equal(clientFirstNameResp);\r",
+							"    pm.expect(pm.response.json().lastname).to.equal(clientLastNameResp);\r",
+							"    pm.expect(pm.response.json().totalprice).to.equal(totalPriceResp);\r",
+							"    pm.expect(String(pm.response.json().depositpaid)).to.equal(depositPaidResp);\r",
+							"    pm.expect(pm.response.json().bookingdates.checkin).to.equal(checkInDateResp);\r",
+							"    pm.expect(pm.response.json().bookingdates.checkout).to.equal(checkOutDateResp);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BaseURL}}/booking/:id",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"booking",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{clientID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Token",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var statusCode = 200;\r",
+							"\r",
+							"pm.environment.set(\"abstractedToken\", pm.response.json().token);\r",
+							"\r",
+							"pm.test(\"Check response\", function ()\r",
+							"{\r",
+							"    pm.expect(pm.response.code).to.equal(statusCode);\r",
+							"    pm.expect(pm.response.json().token).to.equal(pm.environment.get(\"abstractedToken\"));\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\" : {{userName}},\r\n    \"password\" : {{passWord}}\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/auth",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"auth"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update Booking",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var statusCode = 200;\r",
+							"var clientFirstNameResp     = pm.environment.get(\"updateClientFirstName\").replace(/^\"(.*)\"$/, '$1')\r",
+							"var clientLastNameResp      = pm.environment.get(\"updateClientLastName\").replace(/^\"(.*)\"$/, '$1');\r",
+							"var totalPriceResp          = Number(pm.environment.get(\"updateTotalPrice\"));\r",
+							"var depositPaidResp         = pm.environment.get(\"updateDepositPaid\");\r",
+							"var checkInDateResp         = pm.environment.get(\"updateCheckInDate\").replace(/^\"(.*)\"$/, '$1');\r",
+							"var checkOutDateResp        = pm.environment.get(\"updateCheckOutDate\").replace(/^\"(.*)\"$/, '$1');\r",
+							"\r",
+							"\r",
+							"pm.test(\"Check response\", function ()\r",
+							"{\r",
+							"    pm.expect(pm.response.code).to.equal(statusCode);\r",
+							"    pm.expect(pm.response.json().firstname).to.equal(clientFirstNameResp);\r",
+							"    pm.expect(pm.response.json().lastname).to.equal(clientLastNameResp);\r",
+							"    pm.expect(pm.response.json().totalprice).to.equal(totalPriceResp);\r",
+							"    pm.expect(String(pm.response.json().depositpaid)).to.equal(depositPaidResp);\r",
+							"    pm.expect(pm.response.json().bookingdates.checkin).to.equal(checkInDateResp);\r",
+							"    pm.expect(pm.response.json().bookingdates.checkout).to.equal(checkOutDateResp);\r",
+							"});\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"accept": true
+				}
+			},
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Accept",
+						"value": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Cookie",
+						"value": "token={{abstractedToken}}",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"firstname\"     : {{updateClientFirstName}},\r\n    \"lastname\"      : {{updateClientLastName}},\r\n    \"totalprice\"    : {{updateTotalPrice}},\r\n    \"depositpaid\"   : {{updateDepositPaid}},\r\n    \"bookingdates\"  :\r\n                     {\r\n                            \"checkin\"   : {{updateCheckInDate}},\r\n                            \"checkout\"  : {{updateCheckOutDate}}\r\n                     }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/booking/:id",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"booking",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{clientID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Booking ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var statusCode = 201;\r",
+							"\r",
+							"pm.test(\"Check response\", function ()\r",
+							"{\r",
+							"    pm.expect(pm.response.code).to.equal(statusCode);\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Cookie",
+						"value": "token={{abstractedToken}}",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "{{BaseURL}}/booking/:id",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"booking",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "{{clientID}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Check Removed ID",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"var responseIDs = pm.response.json();\r",
+							"\r",
+							"var targetID = pm.environment.get(\"clientID\");\r",
+							"\r",
+							"// checking the id is exist in the response\r",
+							"var searchID = responseIDs.some(item => item.bookingid === targetID);\r",
+							"\r",
+							"pm.test(\"Check response\", function ()\r",
+							"{\r",
+							"    pm.expect(searchID).to.be.false;\r",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{BaseURL}}/booking",
+					"host": [
+						"{{BaseURL}}"
+					],
+					"path": [
+						"booking"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

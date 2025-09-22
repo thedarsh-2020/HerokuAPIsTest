@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name = "Suite" parallel = "tests">
+    <test name = "APIs_Test">
+        <classes>
+            <class name = "CheckingIdRemoved"/>
+        </classes>
+    </test>
+</suite>
